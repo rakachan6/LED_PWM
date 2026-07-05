@@ -1,0 +1,8 @@
+.mxproject
+
+/build/*.elf
+/build/*.bin
+/build/*.hex
+/build/*.o
+
+/debug
