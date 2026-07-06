@@ -1,6 +1,7 @@
 #include "utils.h"
 
-#include "main.h"
+#include "cli.h"
+
 
 volatile uint32_t uptime_ms = 0U; /**< Value for count application uptime **/
 
@@ -139,7 +140,12 @@ void flags_check(void)
     if (command_received_flag)
     {
         command_received_flag = 0U;
-        //CLI handler
+        cli_process();
     }
 }
 
+void mcu_reset(void)
+{
+    usart1_transmit("RESET\r\n");
+    NVIC_SystemReset();
+}

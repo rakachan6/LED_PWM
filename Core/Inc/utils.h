@@ -3,7 +3,6 @@
 
 #include "stm32f4xx.h"
 #include "usart.h"
-#include "ring_buffer.h"
 
 #define HSE_ON_TIMEOUT      (20U)
 #define PLL_ON_TIMEOUT      (5U)
@@ -24,5 +23,5 @@ typedef enum
 
 void system_init(void);
 void flags_check(void);
-
+void mcu_reset(void);
 #endif //LED_PWM_UTILS_H
