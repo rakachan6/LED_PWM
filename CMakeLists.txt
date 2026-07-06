@@ -36,7 +36,9 @@ add_executable(${CMAKE_PROJECT_NAME}
         Core/Src/utils.c
         Core/Inc/utils.h
         Core/Src/usart.c
-        Core/Inc/usart.h)
+        Core/Inc/usart.h
+        Core/Src/ring_buffer.c
+        Core/Inc/ring_buffer.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)

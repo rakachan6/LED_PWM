@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include "main.h"
+
 volatile uint32_t uptime_ms = 0U; /**< Value for count application uptime **/
 
 /**
@@ -125,5 +127,19 @@ void system_init(void)
 {
     set_core_clock_to_100MHz();
     usart_init();
+}
+
+void flags_check(void)
+{
+    if (rx_rb_overflow_flag)
+    {
+        rx_rb_overflow_flag = 0U;
+        usart1_transmit("RX ring buffer overflow\r\n");
+    }
+    if (command_received_flag)
+    {
+        command_received_flag = 0U;
+        //CLI handler
+    }
 }
 

@@ -3,10 +3,14 @@
 
 #include "stm32f4xx.h"
 #include "usart.h"
+#include "ring_buffer.h"
 
 #define HSE_ON_TIMEOUT      (20U)
 #define PLL_ON_TIMEOUT      (5U)
 #define PLL_SWITCH_TIMEOUT  (5U)
+
+extern volatile uint8_t rx_rb_overflow_flag;
+extern volatile uint8_t command_received_flag;
 
 /**
  * @brief Returned values for clock configuration functions.
@@ -19,5 +23,6 @@ typedef enum
 }wait_status_t;
 
 void system_init(void);
+void flags_check(void);
 
 #endif //LED_PWM_UTILS_H
