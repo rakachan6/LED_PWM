@@ -1,10 +1,16 @@
 #include "usart.h"
 
-ring_buffer_t rx_ring_buffer = {0};
-volatile uint8_t rx_rb_overflow_flag = 0U;
+ring_buffer_t rx_ring_buffer = {0}; /**< Received ring buffer **/
+volatile uint8_t rx_rb_overflow_flag = 0U; /**< Received ring buffer overflow flag **/
 volatile uint8_t command_received_flag = 0U;
 
-//PA9 - TX      PA10 - RX
+/**
+ * @brief Initialize USART.
+ * @note Configure PA9(TX) as: high speed, no pull-up / no pull-down.
+ * @note Configure PA10(RX) as: high speed, pull-up.
+ * @note Enable RX and IDLE interrupts.
+ * @note Set priority level as 6.
+ */
 void usart_init(void)
 {
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -37,12 +43,14 @@ void usart_init(void)
 
 void USART1_IRQHandler(void)
 {
+    //Receive
     if (USART1->SR & USART_SR_RXNE)
     {
         uint8_t byte = USART1->DR;
         if (ring_buffer_put(&rx_ring_buffer, byte) == RING_BUFFER_OVF)
             rx_rb_overflow_flag = 1U;
     }
+    //Transmit
     if ((USART1->SR & USART_SR_TXE) &&
         (USART1->CR1 & USART_CR1_TXEIE))
     {
@@ -52,6 +60,7 @@ void USART1_IRQHandler(void)
         else
             USART1->DR = byte;
     }
+    //IDLE
     if (USART1->SR & USART_SR_IDLE)
     {
         command_received_flag = 1U;
@@ -60,6 +69,10 @@ void USART1_IRQHandler(void)
     }
 }
 
+/**
+ * @brief Transmit string via USART1.
+ * @param[in] str Pointer to the string.
+ */
 void usart1_transmit(char * str)
 {
     while (*str)
